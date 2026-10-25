@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>NEXOO Cloud Dashboard</title>
+  <style>
+    :root {
+      --bg-color: #05070B;
+      --accent-color: #155BFF;
+      --text-color: #FFFFFF;
+      --card-bg: #0F141F;
+    }
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+    .header {
+      padding: 30px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #1A2233;
+    }
+    .logo {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+    .logo span {
+      color: var(--accent-color);
+    }
+    .container {
+      padding: 40px;
+    }
+    .card {
+      background: var(--card-bg);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 20px;
+      border: 1px solid #1A2233;
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    .stat-title {
+      font-size: 13px;
+      color: #8A99AD;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .stat-value {
+      font-size: 24px;
+      font-weight: 600;
+    }
+    .progress-bar {
+      background: #1A2233;
+      height: 8px;
+      border-radius: 4px;
+      margin-top: 12px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      background: var(--accent-color);
+      height: 100%;
+      width: 45%;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="logo">NEXOO <span>CLOUD</span></div>
+    <div style="font-size: 14px; color: #4ADE80;">● SSD Mount Active (NEXOO Cloud SSD)</div>
+  </div>
+  <div class="container">
+    <div class="card">
+      <h3>Storage & Performance</h3>
+      <div class="stats-grid">
+        <div>
+          <div class="stat-title">Cloud Storage</div>
+          <div class="stat-value">450 GB / 1 TB</div>
+        </div>
+        <div>
+          <div class="stat-title">SSD Cache Buffer</div>
+          <div class="stat-value" id="cache-size">Loading...</div>
+        </div>
+        <div>
+          <div class="stat-title">Sync Speed</div>
+          <div class="stat-value">124 MB/s</div>
+        </div>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const { ipcRenderer } = require('electron');
+    setInterval(async () => {
+      const status = await ipcRenderer.invoke('get-cache-status');
+      document.getElementById('cache-size').innerText = (status.size / (1024*1024*1024)).toFixed(2) + ' GB';
+    }, 2000);
+  </script>
+</body>
+</html>
